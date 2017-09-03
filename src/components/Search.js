@@ -1,29 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import '../App.css';
+import {
+  actionTeste,
+} from '../actions';
 
 class Search extends Component {
   constructor(props) {
     super(props);
     this.state = {
       searchText: '',
-      products: [
-        {
-          id: '1',
-          tipo: 'banana',
-          valor: '100',
-        },
-        {
-          id: '2',
-          tipo: 'abacaxi',
-          valor: '200',
-        },
-        {
-          id: '3',
-          tipo: 'bolacha',
-          valor: '300',
-        },
-      ],
     };
   }
 
@@ -32,9 +19,10 @@ class Search extends Component {
   }
 
   renderSearchComplete() {
-    const { products, searchText } = this.state;
+    const { searchText } = this.state;
+    const { productsList } = this.props;
     const content = [];
-    const productsFiltered = products.filter((item) => {
+    const productsFiltered = productsList.filter((item) => {
       return searchText ? item.tipo.includes(searchText) : false;
     });
 
@@ -51,7 +39,7 @@ class Search extends Component {
         </ul>
     );
   }
-  
+
   render() {
     return (
       <header
@@ -90,4 +78,18 @@ class Search extends Component {
   }
 }
 
-export default Search;
+const mapStateToProps = ({ products }) => {
+  const {
+    productsList,
+  } = products;
+
+  return {
+    productsList,
+  };
+};
+
+export default connect(mapStateToProps,
+  {
+    actionTeste,
+  }
+)(Search);
