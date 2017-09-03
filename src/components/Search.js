@@ -18,16 +18,29 @@ class Search extends Component {
     this.setState({ searchText: event.target.value });
   }
 
-  renderSearchComplete() {
+  onAutoCompleteTextClick(e, product) {
+    e.preventDefault();
+    this.setState({
+      searchText: product.tipo,
+    });
+  }
+  renderSearchAutoComplete() {
     const { searchText } = this.state;
     const { productsList } = this.props;
     const content = [];
     const productsFiltered = productsList.filter((item) => {
-      return searchText ? item.tipo.includes(searchText) : false;
+      return (searchText && item.tipo !== searchText) ? item.tipo.includes(searchText) : false;
     });
 
     productsFiltered.forEach((product) => {
-      content.push(<li key={product.id}>{product.tipo}</li>);
+      content.push(
+        <a
+          href=""
+          onClick={(e) => { this.onAutoCompleteTextClick(e, product); }}
+        >
+          <li key={product.id}>{product.tipo}</li>
+        </a>
+      );
     });
 
     return (
@@ -65,13 +78,14 @@ class Search extends Component {
           <a
             href="/"
             className="search-button"
+            onClick={(e) => { this.onSearchClick(e); }}
           >
             <FontAwesome
               name="search"
               className="search-icon"
             />
           </a>
-          {this.renderSearchComplete()}
+          {this.renderSearchAutoComplete()}
         </div>
       </header>
     );
