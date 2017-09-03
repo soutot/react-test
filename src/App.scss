@@ -1,3 +1,44 @@
+.header {
+  display: flex;
+  height: 5vh;
+  align-items: center;
+}
+
+.logo {
+  flex: 1;
+  border: 1px solid #f0f;
+}
+
+.search {
+  flex: 4;
+  border: 1px solid #9cf;
+  justify-content: 'flex-start';
+}
+
+.search-box {
+  width: 50vw;
+}
+
+.search-button {
+  background-color: #F1F1F1;
+  color: #C4C4C4;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.search-icon {
+  font-size: 12px;
+}
+
+.search-complete {
+  position: absolute;
+  list-style: none;
+  border: 1px solid;
+  top: 10px;
+  background-color: #FFFFFF;
+  justify-content: flex-start;
+}
+
 .App {
   text-align: center;
 }
