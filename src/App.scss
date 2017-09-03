@@ -7,6 +7,9 @@
 .logo {
   flex: 1;
   border: 1px solid #f0f;
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px
 }
 
 .search {
@@ -16,7 +19,7 @@
 }
 
 .search-box {
-  width: 50vw;
+  width: 60vw;
 }
 
 .search-button {

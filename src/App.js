@@ -23,6 +23,8 @@ class App extends Component {
           <div
             style={{
               backgroundColor: '#F1F1F1',
+              display: 'flex',
+              height: '100vh',
             }}
           >
             <Results />

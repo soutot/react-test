@@ -5,7 +5,10 @@
 
 .logo {
   flex: 1;
-  border: 1px solid #f0f; }
+  border: 1px solid #f0f;
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px; }
 
 .search {
   flex: 4;
@@ -13,7 +16,7 @@
   justify-content: 'flex-start'; }
 
 .search-box {
-  width: 50vw; }
+  width: 60vw; }
 
 .search-button {
   background-color: #F1F1F1;
