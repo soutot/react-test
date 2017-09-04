@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import '../App.css';
 import {
-  actionTeste,
+  searchForProduct,
 } from '../actions';
 
 class Search extends Component {
@@ -11,7 +11,31 @@ class Search extends Component {
     super(props);
     this.state = {
       searchText: '',
+      displayModal: false,
+      modalText: '',
     };
+  }
+
+  onSearchButtonClick(event) {
+    event.preventDefault();
+
+    const { searchText } = this.state;
+    const { productsList } = this.props;
+
+    const filteredProductsList = productsList.filter((item) => {
+      return searchText ? item.tipo.includes(searchText) : false;
+    });
+    if (filteredProductsList.length > 0) {
+      this.props.searchForProduct(filteredProductsList);
+      return;
+    }
+
+    window.alert('Nenhum produto selecionado');
+
+    // this.setState({
+    //   modalText: 'Nenhum produto selecionado',
+    //   displayModal: true,
+    // });
   }
 
   onSearchChange(event) {
@@ -24,6 +48,7 @@ class Search extends Component {
       searchText: product.tipo,
     });
   }
+
   renderSearchAutoComplete() {
     const { searchText } = this.state;
     const { productsList } = this.props;
@@ -37,8 +62,9 @@ class Search extends Component {
         <a
           href=""
           onClick={(e) => { this.onAutoCompleteTextClick(e, product); }}
+          key={product.id}
         >
-          <li key={product.id}>{product.tipo}</li>
+          <li>{product.tipo}</li>
         </a>
       );
     });
@@ -51,6 +77,63 @@ class Search extends Component {
           {content}
         </ul>
     );
+  }
+
+  renderModal() {
+    const {
+      modalText,
+      displayModal,
+    } = this.state;
+
+    if (displayModal) {
+      return (
+        <div
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignContent: 'center',
+            position: 'absolute',
+            width: '100vw',
+           // height: '100vh',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              width: '30vw',
+              height: '30vh',
+              position: 'fixed',
+            }}
+          >
+            <span>
+              {modalText}
+            </span>
+            <a
+              href="/"
+              onClick={(e) => {
+                e.preventDefault();
+                this.setState({
+                  displayModal: false,
+                });
+              }}
+              style={{
+                backgroundColor: 'blue',
+                width: '100px',
+                textAlign: 'center',
+              }}
+            >
+              OK
+            </a>
+          </div>
+        </div>
+      );
+    }
+    return '';
   }
 
   render() {
@@ -78,7 +161,7 @@ class Search extends Component {
           <a
             href="/"
             className="search-button"
-            onClick={(e) => { this.onSearchClick(e); }}
+            onClick={(e) => { this.onSearchButtonClick(e); }}
           >
             <FontAwesome
               name="search"
@@ -87,6 +170,7 @@ class Search extends Component {
           </a>
           {this.renderSearchAutoComplete()}
         </div>
+        {this.renderModal()}
       </header>
     );
   }
@@ -104,6 +188,6 @@ const mapStateToProps = ({ products }) => {
 
 export default connect(mapStateToProps,
   {
-    actionTeste,
+    searchForProduct,
   }
 )(Search);

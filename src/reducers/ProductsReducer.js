@@ -16,12 +16,13 @@ const INITIAL_STATE = {
       valor: '300',
     },
   ],
+  filteredProductsList: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case 'teste':
-      return { ...state, productsList: 'teste2' };
+    case 'SEARCH_PRODUCT':
+      return { ...state, filteredProductsList: action.payload };
     default:
       return state;
   }

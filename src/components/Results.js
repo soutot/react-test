@@ -1,7 +1,67 @@
-
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-export default class Results extends Component {
+class Results extends Component {
+  renderResults() {
+    const { filteredProductsList } = this.props;
+    const content = [];
+    console.log('results: ', filteredProductsList);
+
+    filteredProductsList.forEach((product) => {
+      const item = (
+        <li
+          key={product.id}
+          style={{
+            backgroundColor: '#ffffff',
+            display: 'flex',
+            height: '150px',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid',
+            padding: '10px',
+          }}
+        >
+          <div
+            style={{
+              flex: 2,
+            }}
+          >
+            imagem
+          </div>
+          <div
+            style={{
+              flex: 4,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <span style={{ flex: 1 }}>{product.valor}</span>
+            <span style={{ flex: 1 }}>{product.tipo}</span>
+          </div>
+          <div
+            style={{
+              flex: 1,
+            }}
+          >
+            <span>alguma coisa</span>
+          </div>
+        </li>
+        );
+
+      content.push(item);
+    });
+    return (
+      <ul
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          listStyle: 'none',
+          width: '65vw',
+        }}
+      >
+      {content}
+      </ul>
+    );
+  }
   render() {
     return (
       <section
@@ -11,121 +71,20 @@ export default class Results extends Component {
           justifyContent: 'center',
         }}
       >
-        <ul
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            listStyle: 'none',
-            width: '65vw',
-          }}
-        >
-          <li
-            style={{
-              backgroundColor: '#ffffff',
-              display: 'flex',
-              flex: 1,
-              justifyContent: 'space-between',
-              borderBottom: '1px solid',
-              padding: '10px',
-            }}
-          >
-            <div
-              style={{
-                flex: 2,
-              }}
-            >
-              imagem
-            </div>
-            <div
-              style={{
-                flex: 4,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <span style={{ flex: 1 }}>Valor</span>
-              <span style={{ flex: 1 }}>Descrição</span>
-            </div>
-            <div
-              style={{
-                flex: 1,
-              }}
-            >
-              <span>alguma coisa</span>
-            </div>
-          </li>
-
-          <li
-            style={{
-              backgroundColor: '#ffffff',
-              display: 'flex',
-              flex: 1,
-              justifyContent: 'space-between',
-              borderBottom: '1px solid',
-              padding: '10px',
-            }}
-          >
-            <div
-              style={{
-                flex: 2,
-              }}
-            >
-              imagem
-            </div>
-            <div
-              style={{
-                flex: 4,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <span style={{ flex: 1 }}>Valor</span>
-              <span style={{ flex: 1 }}>Descrição</span>
-            </div>
-            <div
-              style={{
-                flex: 1,
-              }}
-            >
-              <span>alguma coisa</span>
-            </div>
-          </li>
-          <li
-            style={{
-              backgroundColor: '#ffffff',
-              display: 'flex',
-              flex: 1,
-              justifyContent: 'space-between',
-              padding: '10px',
-            }}
-          >
-            <div
-              style={{
-                flex: 2,
-              }}
-            >
-              imagem
-            </div>
-            <div
-              style={{
-                flex: 4,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <span style={{ flex: 1 }}>Valor</span>
-              <span style={{ flex: 1 }}>Descrição</span>
-            </div>
-            <div
-              style={{
-                flex: 1,
-              }}
-            >
-              <span>alguma coisa</span>
-            </div>
-          </li>
-        </ul>
+      {this.renderResults()}
       </section>
     );
   }
 }
+
+const mapStateToProps = ({ products }) => {
+  const {
+    filteredProductsList,
+  } = products;
+
+  return {
+    filteredProductsList,
+  };
+};
+
+export default connect(mapStateToProps, {})(Results);
