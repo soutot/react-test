@@ -2,12 +2,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Results extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      page: 1,
+    };
+  }
+
+  onPaginationClick(page) {
+    this.setState({
+      page,
+    });
+  }
+
   renderResults() {
     const { filteredProductsList } = this.props;
+    const { page } = this.state;
     const content = [];
-    console.log('results: ', filteredProductsList);
+    const pagesCounter = filteredProductsList && filteredProductsList.length / 4;
+    const pagination = [];
+    const itemsToRender = filteredProductsList.filter((item, i) => {
+      // return ((i / 4) - page - 1) < 1;
+      return i < 4;
+    });
 
-    filteredProductsList.forEach((product) => {
+    itemsToRender.forEach((product) => {
       const item = (
         <li
           key={product.id}
@@ -25,7 +44,10 @@ class Results extends Component {
               flex: 2,
             }}
           >
-            imagem
+            <img
+              alt={product.title}
+              src={product.thumbnail}
+            />
           </div>
           <div
             style={{
@@ -34,21 +56,34 @@ class Results extends Component {
               flexDirection: 'column',
             }}
           >
-            <span style={{ flex: 1 }}>{product.valor}</span>
-            <span style={{ flex: 1 }}>{product.tipo}</span>
+            <span style={{ flex: 1 }}>{product.price}</span>
+            <span style={{ flex: 1 }}>{product.title}</span>
           </div>
           <div
             style={{
               flex: 1,
             }}
           >
-            <span>alguma coisa</span>
+            <span>{product.condition}</span>
           </div>
         </li>
         );
 
       content.push(item);
     });
+
+    // if (pagesCounter) {
+    //   for (const i = page - 1; i < pagesCounter; i + 1) {
+    //     const item = (
+    //       <li key={i}>
+    //         <a href="/" onClick={() => this.onPaginationClick(i)}>
+    //           {i}
+    //         </a>
+    //       </li>
+    //     );
+    //     pagination.push(item);
+    //   }
+    // }
     return (
       <ul
         style={{
@@ -58,7 +93,17 @@ class Results extends Component {
           width: '65vw',
         }}
       >
-      {content}
+        {content}
+        <ul
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            listStyle: 'none',
+            width: '65vw',
+          }}
+        >
+          {pagination}
+        </ul>
       </ul>
     );
   }

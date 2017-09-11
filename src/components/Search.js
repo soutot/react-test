@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import '../App.css';
 import {
   searchForProduct,
+  fetchProducts,
 } from '../actions';
 
 class Search extends Component {
@@ -20,13 +21,18 @@ class Search extends Component {
     event.preventDefault();
 
     const { searchText } = this.state;
-    const { productsList } = this.props;
+    const { apiProducts } = this.props;
 
-    const filteredProductsList = productsList.filter((item) => {
-      return searchText ? item.tipo.includes(searchText) : false;
+    const filteredProductsList = apiProducts.filter((item) => {
+      const title = item.title.toLowerCase();
+      const text = searchText.toLowerCase();
+      return text ? title.includes(text) : false;
     });
     if (filteredProductsList.length > 0) {
       this.props.searchForProduct(filteredProductsList);
+      this.setState({
+        searchText: '',
+      });
       return;
     }
 
@@ -45,17 +51,35 @@ class Search extends Component {
   onAutoCompleteTextClick(e, product) {
     e.preventDefault();
     this.setState({
-      searchText: product.tipo,
+      searchText: product.title,
     });
   }
 
   renderSearchAutoComplete() {
     const { searchText } = this.state;
-    const { productsList } = this.props;
+    const { productsList, apiProducts } = this.props;
+    if (searchText) {
+      if (!apiProducts) {
+        fetch(`/products?q=${searchText}`)
+        .then(res => res.json())
+        .then((products) => {
+          this.props.fetchProducts(products);
+        })
+        .catch((err) => {
+          // window.alert('Ocorreu um erro ao solicitar os dados. Por favor, tente novamente');
+          console.log('ERRO: ', err);
+        });
+      }
+    } else {
+      this.props.fetchProducts(null);
+    }
     const content = [];
-    const productsFiltered = productsList.filter((item) => {
-      return (searchText && item.tipo !== searchText) ? item.tipo.includes(searchText) : false;
-    });
+    const productsFiltered = apiProducts ? apiProducts.filter((item) => {
+      const title = item.title.toLowerCase();
+      const text = searchText.toLowerCase();
+      return (text && title !== text) ? title.includes(text) : false;
+    }) :
+    [];
 
     productsFiltered.forEach((product) => {
       content.push(
@@ -64,7 +88,7 @@ class Search extends Component {
           onClick={(e) => { this.onAutoCompleteTextClick(e, product); }}
           key={product.id}
         >
-          <li>{product.tipo}</li>
+          <li>{product.title}</li>
         </a>
       );
     });
@@ -145,7 +169,14 @@ class Search extends Component {
           className="logo"
         >
           <div>
-            Logo
+            <img
+              src="https://logodownload.org/wp-content/uploads/2016/08/Mercado-Livre-logo-6.png"
+              alt="Logo Mercado Livre"
+              title="Logo Mercado Livre"
+              style={{
+                width: '50px',
+              }}
+            />
           </div>
         </div>
         <div
@@ -178,16 +209,17 @@ class Search extends Component {
 
 const mapStateToProps = ({ products }) => {
   const {
-    productsList,
+    apiProducts,
   } = products;
 
   return {
-    productsList,
+    apiProducts,
   };
 };
 
 export default connect(mapStateToProps,
   {
     searchForProduct,
+    fetchProducts,
   }
 )(Search);

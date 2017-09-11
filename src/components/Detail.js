@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-export default class Results extends Component {
+class Details extends Component {
   render() {
+    const { filteredProductsList } = this.props;
+
     return (
       <section
         style={{
@@ -86,3 +89,15 @@ export default class Results extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ products }) => {
+  const {
+    filteredProductsList,
+  } = products;
+
+  return {
+    filteredProductsList,
+  };
+};
+
+export default connect(mapStateToProps, {})(Details);
